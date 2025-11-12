@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="GetYTThumbnail — Free YouTube Thumbnail Downloader. Paste a YouTube URL or ID to view and download HD, SD, HQ, MQ, and default thumbnails. No sign‑up and no data stored.">
+    <meta name="keywords" content="youtube thumbnail downloader, download youtube thumbnail, hd thumbnail, youtube thumbnail, video thumbnail">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#ff0000">
+
+    <!-- Canonical URL: replace with your domain when deployed -->
+    <link rel="canonical" href="/">
+    <base href="/">
+    <link rel="alternate" hreflang="en" href="/">
+    <link rel="alternate" hreflang="x-default" href="/">
+    <meta name="application-name" content="GetYTThumbnail">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="GetYTThumbnail — YouTube Thumbnail Downloader (HD, SD, All Sizes)">
+    <meta property="og:description" content="Paste a YouTube URL or ID to fetch and download all available thumbnail resolutions instantly.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/ff0000/ffffff?text=YouTube+Thumbnail+Downloader">
+    <meta property="og:image:alt" content="GetYTThumbnail — YouTube Thumbnail Downloader">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GetYTThumbnail — YouTube Thumbnail Downloader (HD, SD, All Sizes)">
+    <meta name="twitter:description" content="Fetch and download YouTube thumbnails in seconds.">
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630/ff0000/ffffff?text=YouTube+Thumbnail+Downloader">
+    <meta name="twitter:image:alt" content="GetYTThumbnail — YouTube Thumbnail Downloader">
+
+    <!-- Performance hints for image host -->
+    <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
+    <link rel="dns-prefetch" href="//i.ytimg.com">
+    <link rel="preconnect" href="https://img.youtube.com" crossorigin>
+    <link rel="dns-prefetch" href="//img.youtube.com">
+    <link rel="preconnect" href="https://plausible.io" crossorigin>
+    <link rel="dns-prefetch" href="//plausible.io">
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+    <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
+    <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+    <link rel="dns-prefetch" href="//googleads.g.doubleclick.net">
+
+    <!-- Basic CSP (adjust if you integrate third-party scripts) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://i.ytimg.com https://img.youtube.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com; connect-src 'self' https://plausible.io https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://adservice.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>GetYTThumbnail — YouTube Thumbnail Downloader | Free HD Thumbnails</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' ry='12' fill='%23ff0000'/%3E%3Cpolygon points='26,20 26,44 46,32' fill='white'/%3E%3C/svg%3E">
+    <meta property="og:site_name" content="GetYTThumbnail">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-color: #ff0000;
+            --secondary-color: #282828;
+            --accent-color: #4285f4;
+            --text-dark: #0f0f0f;
+            --text-light: #606060;
+            --bg-light: #f9f9f9;
+            --border-color: #e5e5e5;
+            --success-color: #00a650;
+            --error-color: #d93025;
+        }
+        body {
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6; color: var(--text-dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; padding: 20px;
+        }
+        .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+        .skip-link:focus { position: fixed; left: 16px; top: 16px; width: auto; height: auto; padding: 8px 12px; background: #111; color: #fff; border-radius: 8px; z-index: 10000; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; padding: 40px 20px; background: #fff; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        h1 { font-size: 2.2em; color: #1a73e8; margin-bottom: 10px; font-weight: 800; }
+.subtitle { font-size: 1.05em; color: var(--text-light); margin-bottom: 20px; }
+        .device-note { font-size: 0.95em; color: var(--text-light); }
+        .device-icons { display: inline-flex; align-items: center; gap: 8px; margin-right: 8px; }
+        .device-icons span { font-size: 1.1em; line-height: 1; }
+        .brand { display:inline-block; font-weight: 900; color:#1a73e8; background: #eef3ff; border:2px solid #dbe7ff; padding: 6px 12px; border-radius: 999px; margin-bottom: 10px; letter-spacing: .02em; }
+        /* Flip wrapper base to ensure consistent height and perspective */
+        .flip-card-wrapper { position: relative; perspective: 1000px; min-height: 220px; overflow: hidden; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .6s; }
+        /* Ensure top ad slot stretches to wrapper height */
+        .ad-banner-top .ad-slot { width: 100%; min-height: inherit; display: flex; align-items: center; justify-content: center; }
+        /* Specific sizing for ad banner to avoid overly tall wrapper */
+        .ad-banner-top.flip-card-wrapper { min-height: 160px; }
+        .flip-card-back .ad-content { text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+        .flip-card-back .ad-content strong { font-size: 1.1em; }
+        /* Make ad/aff front faces transparent so gradients show through */
+        .ad-banner-top .flip-card-front,
+        .ad-sidebar .flip-card-front,
+        .sponsored-post .flip-card-front { background: transparent; }
+
+        /* Ad Space - Top Banner */
+        .ad-banner-top { background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 30px; min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .ad-slot { width: 100%; height: 100%; display: grid; place-items: center; }
+        .ad-label { font-size: 0.75em; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .ad-content { color: #fff; font-weight: 600; font-size: 1.05em; }
+
+        main.main-content { display: grid; grid-template-columns: 1fr 300px; gap: 30px; margin-bottom: 30px; }
+        .downloader-section { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 1.05em; }
+        .input-wrapper { position: relative; display: flex; gap: 10px; }
+        input[type="url"], input[type="text"] { flex: 1; padding: 16px 20px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1em; transition: all .3s ease; outline: none; }
+        input[type="url"]:focus, input[type="text"]:focus { border-color: var(--accent-color); box-shadow: 0 0 0 4px rgba(66,133,244,.1); }
+        .btn { padding: 14px 24px; border: 0; border-radius: 12px; font-size: 1em; font-weight: 700; cursor: pointer; transition: all .25s ease; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-primary { background: var(--accent-color); color: #fff; }
+        .btn-primary:hover { background: #1a73e8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(66,133,244,.35); }
+        .btn-download { background: var(--success-color); color: #fff; width: 100%; margin-top: 10px; }
+        .btn-download:hover { background: #0a8a49; }
+.btn-open { background: #374151; color: #fff; width: 100%; margin-top: 8px; }
+        .btn-secondary { background: #6b7280; color: #fff; }
+        .btn-secondary:hover { background: #4b5563; }
+
+        .results-section { margin-top: 22px; display: none; }
+        .results-section.active { display: block; }
+        .video-info { background: var(--bg-light); padding: 16px; border-radius: 12px; margin-bottom: 20px; }
+        .video-title { font-size: 1.15em; font-weight: 700; margin-bottom: 6px; color: var(--text-dark); }
+        .thumbnail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .thumbnail-card { background: #fff; border: 2px solid var(--border-color); border-radius: 12px; padding: 14px; transition: all .25s ease; }
+        .thumbnail-card:hover { border-color: var(--accent-color); box-shadow: 0 8px 25px rgba(0,0,0,0.1); transform: translateY(-4px); }
+        .thumbnail-img { width: 100%; height: auto; display: block; border-radius: 8px; margin-bottom: 10px; }
+        .thumbnail-label { font-weight: 700; margin-bottom: 6px; color: var(--text-dark); }
+        .resolution { font-size: .9em; color: var(--text-light); margin-bottom: 6px; }
+
+        /* 3D flip card */
+.flip-card { position: relative; width: 100%; aspect-ratio: 16 / 9; cursor: pointer; }
+        .flip-card-front, .flip-card-back { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
+.flip-card-front { background: transparent; display: grid; place-items: center; }
+        .flip-card-back { background: linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.55)); color: #fff; transform: rotateY(180deg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; gap: 8px; text-align: center; }
+        .flip-card-wrapper:hover .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-wrapper.is-flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-hint { font-size: .8em; opacity: .85; }
+.btn-contrast { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; font-weight: 800; padding: 12px 20px; font-size: 1rem; border: 2px solid rgba(255,255,255,.9); border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,.25); text-transform: uppercase; letter-spacing: .02em; }
+        .btn-contrast:hover { filter: brightness(1.05); box-shadow: 0 10px 24px rgba(0,0,0,.3); }
+
+        /* Sidebar */
+        aside.sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .ad-sidebar { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 20px; border-radius: 12px; text-align: center; min-height: 250px; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .affiliate-section { background: #fff; padding: 22px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .affiliate-title { font-size: 1.2em; font-weight: 800; margin-bottom: 12px; color: var(--text-dark); }
+        .affiliate-item { padding: 14px; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 10px; transition: all .2s ease; }
+        .affiliate-item:hover { border-color: var(--accent-color); background: var(--bg-light); }
+        .affiliate-link { color: var(--accent-color); text-decoration: none; font-weight: 700; display: block; margin-bottom: 4px; }
+        .affiliate-link:hover { text-decoration: underline; }
+        .affiliate-desc { font-size: .92em; color: var(--text-light); }
+
+        /* Sponsored post placement */
+        .sponsored-post { background: #fff; padding: 18px; border-radius: 12px; border: 2px dashed var(--border-color); margin-top: 20px; }
+        .sponsored-badge { display: inline-block; font-size: .72em; text-transform: uppercase; letter-spacing: .08em; color: #6b7280; background: #f3f4f6; border-radius: 999px; padding: 4px 8px; margin-bottom: 8px; }
+        .sponsored-post h3 { margin-bottom: 6px; }
+
+        /* Features / How-to / FAQ */
+.features-section, .howto-section, .faq-section { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); margin-bottom: 30px; content-visibility: auto; contain-intrinsic-size: 600px; }
+        .section-title { font-size: 1.8em; font-weight: 800; text-align: center; margin-bottom: 28px; color: var(--text-dark); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; }
+        .feature-card { text-align: center; padding: 20px; border-radius: 12px; background: var(--bg-light); transition: all .2s; }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .feature-icon { font-size: 2.4em; margin-bottom: 10px; }
+        .feature-title { font-size: 1.1em; font-weight: 700; margin-bottom: 8px; color: var(--text-dark); }
+        .feature-desc { color: var(--text-light); }
+
+        .steps-container { max-width: 800px; margin: 0 auto; }
+        .step { display: flex; align-items: flex-start; margin-bottom: 20px; padding: 16px; background: var(--bg-light); border-radius: 12px; border-left: 4px solid var(--accent-color); }
+        .step-number { background: var(--accent-color); color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.05em; flex-shrink: 0; margin-right: 14px; }
+        .faq-item { margin-bottom: 14px; border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .faq-question { padding: 16px; background: var(--bg-light); cursor: pointer; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question:hover { background: #efefef; }
+        .faq-answer { padding: 0 16px; max-height: 0; overflow: hidden; transition: all .25s ease; }
+        .faq-item.active .faq-answer { padding: 16px; max-height: 380px; }
+        .faq-toggle { font-size: 1.4em; transition: transform .2s ease; }
+        .faq-item.active .faq-toggle { transform: rotate(45deg); }
+
+        footer { background: #fff; padding: 36px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; content-visibility: auto; contain-intrinsic-size: 280px; }
+        .footer-content { color: var(--text-light); margin-bottom: 14px; }
+        .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 14px; }
+.footer-link { color: var(--accent-color); text-decoration: none; font-weight: 700; }
+        .footer-link:hover { text-decoration: underline; }
+
+        /* Breadcrumbs */
+        .breadcrumbs { display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:.95em; color: var(--text-light); margin: 10px 0 20px; }
+        .breadcrumbs a { color: var(--accent-color); text-decoration: none; }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .breadcrumbs .sep { opacity:.5; }
+
+        .error-message { background: #fef7f7; border-left: 4px solid var(--error-color); padding: 12px; border-radius: 8px; color: var(--error-color); margin-top: 10px; display: none; }
+        .error-message.active { display: block; }
+        .loading { text-align: center; padding: 30px; display: none; }
+        .loading.active { display: block; }
+        .spinner { border: 4px solid var(--border-color); border-top: 4px solid var(--accent-color); border-radius: 50%; width: 44px; height: 44px; animation: spin 1s linear infinite; margin: 0 auto 14px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            .spinner { animation: none !important; }
+            .feature-card:hover, .thumbnail-card:hover { transform: none !important; box-shadow: none !important; }
+            .flip-card-inner { transform: none !important; }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            main.main-content { grid-template-columns: 1fr; }
+            aside.sidebar { order: -1; }
+            h1 { font-size: 1.9em; }
+            .downloader-section { padding: 26px; }
+            .input-wrapper { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+            header { padding: 24px 16px; }
+            h1 { font-size: 1.5em; }
+            .features-section, .howto-section, .faq-section { padding: 28px 18px; }
+            .thumbnail-grid { grid-template-columns: 1fr; }
+            .btn { padding: 16px 20px; min-height: 44px; }
+            .feature-card, .affiliate-item, .ad-sidebar { box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+        }
+</style>
+    <meta name="google-adsense-account" content="ca-pub-7431808618156384">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7431808618156384" crossorigin="anonymous"></script>
+    <script defer data-domain="example.com" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+    <a href="#downloader-title" class="skip-link">Skip to content</a>
+    <noscript><div style="max-width: 1200px; margin: 8px auto; background:#fff3cd; border:1px solid #ffeeba; color:#856404; padding:10px; border-radius:8px;">Please enable JavaScript to use the YouTube Thumbnail Downloader.</div></noscript>
+    <div class="container">
+        <header role="banner">
+            <div class="brand" aria-label="Website name">GetYTThumbnail</div>
+            <h1>YouTube Thumbnail Downloader</h1>
+            <p class="subtitle">Download high-quality YouTube video thumbnails in seconds.</p>
+            <p class="device-note"><span class="device-icons" aria-hidden="true"><span>📱</span><span>💻</span><span>🖥️</span></span>Works on all devices — mobile, tablet, and desktop.</p>
+        </header>
+
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span class="sep">›</span>
+            <span aria-current="page">YouTube Thumbnail Downloader</span>
+        </nav>
+
+        <!-- Top Advertisement Banner -->
+        <section class="ad-banner-top flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="Top advertisement">
+            <div class="ad-label">Advertisement</div>
+            <div class="ad-slot" data-ad-slot="top-banner-728x90">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="ad-content">
+                            📢 Premium Video Tools – Limited Offer!<br>
+                            <a href="/offer/premium-video-tools" style="color:#fff; text-decoration: underline; margin-top: 8px; display: inline-block;">Learn more about Premium Video Tools →</a>
+                        </div>
+                    </div>
+                    <div class="flip-card-back" style="background: linear-gradient(135deg, #ef4444 0%, #f59e0b 100%);">
+                        <div class="ad-content">
+                            <strong>Upgrade your YouTube workflow</strong><br>
+                            Save time with premium automation tools
+                            <div style="margin-top:10px;">
+                                <a href="/offer/50-off" class="btn btn-contrast">Get 50% off</a>
+                            </div>
+                            <div class="flip-hint" style="margin-top:6px;">Sponsored</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <main class="main-content" role="main">
+            <!-- Main Downloader Section -->
+            <section class="downloader-section" aria-labelledby="downloader-title">
+                <h2 id="downloader-title" class="visually-hidden" style="position:absolute;left:-9999px;">YouTube Thumbnail Fetcher</h2>
+                <form id="thumbnailForm" novalidate>
+                    <div class="input-group">
+                        <label for="videoUrl">Enter YouTube video URL or 11‑character ID</label>
+                        <div class="input-wrapper">
+                            <input
+                                type="url"
+                                id="videoUrl"
+                                name="videoUrl"
+                                placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                aria-label="YouTube video URL"
+                                inputmode="url"
+                                spellcheck="false"
+                                autocomplete="off"
+                                pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+|^[A-Za-z0-9_-]{11}$"
+                                required
+                            >
+                            <button class="btn btn-primary" id="downloadBtn" type="submit">Get thumbnails</button>
+                            <button class="btn btn-secondary" type="button" id="refreshBtn" aria-label="Reset form and clear results">Refresh</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="error-message" id="errorMessage" role="alert" aria-live="polite"></div>
+
+                <div class="loading" id="loading" aria-hidden="true">
+                    <div class="spinner" aria-label="Loading"></div>
+                    <p>Fetching thumbnails...</p>
+                </div>
+
+                <section class="results-section" id="resultsSection" aria-live="polite">
+                    <div class="video-info" id="videoInfo"></div>
+                    <div class="thumbnail-grid" id="thumbnailGrid"></div>
+
+                    <!-- Sponsored post placement inside results -->
+                    <article class="sponsored-post flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="Sponsored post">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <span class="sponsored-badge">Sponsored</span>
+                                <h3>Design Studio Pro – Create stunning thumbnails fast</h3>
+                                <p style="color:var(--text-light)">Try templates optimized for YouTube CTR. Drag‑and‑drop, export to PNG/JPG.</p>
+                                <p style="margin-top:8px"><a href="/sponsored/design-studio-pro/trial" class="affiliate-link" rel="nofollow sponsored">Start free trial →</a></p>
+                            </div>
+                            <div class="flip-card-back" style="background: linear-gradient(135deg, #1d4ed8 0%, #9333ea 100%);">
+                                <h3 class="feature-title" style="color:#fff; margin-bottom:6px;">Create better thumbnails faster</h3>
+                                <p class="feature-desc" style="color:rgba(255,255,255,.9)">CTR‑tested templates, background removal and brand presets.</p>
+                                <a href="/sponsored/design-studio-pro/trial" class="btn btn-contrast" style="margin-top:10px;">Start free trial</a>
+                                <div class="flip-hint" style="margin-top:6px;">Sponsored</div>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+            </section>
+
+            <!-- Sidebar with Ads and Affiliate Links -->
+            <aside class="sidebar" aria-label="Sidebar promotions">
+                <!-- Sidebar Ad Space 1 -->
+                <section class="ad-sidebar flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="Sponsored">
+                    <div class="ad-label">Sponsored</div>
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="ad-content">
+                                <strong>🎥 Video Editing Pro</strong><br>
+                                Professional video editing made easy<br>
+                                <a href="/ad/video-editing-pro" style="color:#fff; text-decoration: underline; margin-top: 10px; display: inline-block;">Try free →</a>
+                            </div>
+                        </div>
+                        <div class="flip-card-back" style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);">
+                            <div class="ad-content">
+                                <strong>Pro templates and effects</strong><br>
+                                Export faster with GPU acceleration
+                                <div style="margin-top:10px;">
+                                    <a href="/ad/video-editing-pro/pro" class="btn btn-contrast">Try Pro</a>
+                                </div>
+                                <div class="flip-hint" style="margin-top:6px;">Sponsored</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Affiliate Marketing Section -->
+                <section class="affiliate-section" aria-label="Recommended tools">
+                    <h3 class="affiliate-title">Recommended tools</h3>
+
+                    <div class="affiliate-item flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="More about TubeBuddy">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <a href="/tools/tubebuddy" class="affiliate-link" rel="nofollow sponsored">TubeBuddy – YouTube Growth</a>
+                                <p class="affiliate-desc">Optimize your channel with powerful analytics and SEO tools.</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <h4 class="feature-title" style="color:#fff">Grow faster</h4>
+                                <p class="feature-desc" style="color:rgba(255,255,255,.9)">Keyword insights, A/B tests and more.</p>
+                                <a href="#" class="btn btn-contrast" target="_blank" rel="nofollow sponsored noopener noreferrer">Learn more</a>
+                                <div class="flip-hint">Sponsored</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="affiliate-item flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="More about Canva Pro">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <a href="/tools/canva-pro" class="affiliate-link" rel="nofollow sponsored">Canva Pro – Design Thumbnails</a>
+                                <p class="affiliate-desc">Create stunning thumbnails with drag‑and‑drop design tools.</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <h4 class="feature-title" style="color:#fff">Design faster</h4>
+                                <p class="feature-desc" style="color:rgba(255,255,255,.9)">Premium templates and brand kits.</p>
+                                <a href="#" class="btn btn-contrast" target="_blank" rel="nofollow sponsored noopener noreferrer">Try Pro</a>
+                                <div class="flip-hint">Sponsored</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="affiliate-item flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="More about vidIQ">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <a href="/tools/vidiq" class="affiliate-link" rel="nofollow sponsored">vidIQ – Channel Analytics</a>
+                                <p class="affiliate-desc">Grow your views with AI‑powered optimization.</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <h4 class="feature-title" style="color:#fff">Smarter insights</h4>
+                                <p class="feature-desc" style="color:rgba(255,255,255,.9)">Find topics and optimize metadata.</p>
+                                <a href="#" class="btn btn-contrast" target="_blank" rel="nofollow sponsored noopener noreferrer">Explore</a>
+                                <div class="flip-hint">Sponsored</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sidebar Ad Space 2 -->
+                <section class="ad-sidebar flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="Featured product">
+                    <div class="ad-label">Featured product</div>
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="ad-content">
+                                <strong>📊 YouTube Analytics Tool</strong><br>
+                                Track your growth & competitors<br>
+                                <a href="/ad/analytics-tool" style="color:#fff; text-decoration: underline; margin-top: 10px; display: inline-block;">Get started →</a>
+                            </div>
+                        </div>
+                        <div class="flip-card-back" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);">
+                            <div class="ad-content">
+                                <strong>Deeper insights</strong><br>
+                                Competitor tracking and content ideas
+                                <div style="margin-top:10px;">
+                                    <a href="/ad/analytics-tool/explore" class="btn btn-contrast">Explore</a>
+                                </div>
+                                <div class="flip-hint" style="margin-top:6px;">Sponsored</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </main>
+
+        <!-- Features Section -->
+        <section class="features-section" aria-label="Why choose us">
+            <h2 class="section-title">Why choose our thumbnail downloader?</h2>
+            <div class="features-grid">
+                <div class="feature-card flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="More about Lightning fast">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="feature-icon">⚡</div>
+                            <h3 class="feature-title">Lightning fast</h3>
+                            <p class="feature-desc">Thumbnails load instantly with zero server processing.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="feature-title" style="color:#fff">Speed that scales</h3>
+                            <p class="feature-desc" style="color:rgba(255,255,255,.9)">Client-side rendering and preconnects minimize latency.</p>
+                            <a class="btn btn-contrast" href="#downloader-title">Try it now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-card flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="More about all resolutions">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="feature-icon">🎯</div>
+                            <h3 class="feature-title">All resolutions</h3>
+                            <p class="feature-desc">MaxRes, SD, HQ, MQ and default – pick what you need.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="feature-title" style="color:#fff">Every size covered</h3>
+                            <p class="feature-desc" style="color:rgba(255,255,255,.9)">From previews to high-res banners, choose the best fit.</p>
+                            <a class="btn btn-contrast" href="#downloader-title">Select quality</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-card flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="More about free features">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="feature-icon">🆓</div>
+                            <h3 class="feature-title">100% free</h3>
+                            <p class="feature-desc">No registration. No tracking. No storage of user data.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="feature-title" style="color:#fff">No strings attached</h3>
+                            <p class="feature-desc" style="color:rgba(255,255,255,.9)">Open-source front-end logic and privacy by design.</p>
+                            <a class="btn btn-contrast" href="#downloader-title">Start now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-card flip-card-wrapper" tabindex="0" role="button" aria-pressed="false" aria-label="More about security">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="feature-icon">🔒</div>
+                            <h3 class="feature-title">Secure</h3>
+                            <p class="feature-desc">Input validated on-device. Content Security Policy enabled.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="feature-title" style="color:#fff">Best practices</h3>
+                            <p class="feature-desc" style="color:rgba(255,255,255,.9)">CSP, referrer policy and no server storage.</p>
+                            <a class="btn btn-contrast" href="#downloader-title">Use safely</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Use Section -->
+        <section class="howto-section" aria-label="How to use">
+            <h2 class="section-title">How to download YouTube thumbnails</h2>
+            <div class="steps-container">
+                <div class="step"><div class="step-number">1</div><div class="step-content"><h3>Copy URL</h3><p>Copy the video URL from YouTube (or just the 11‑character ID).</p></div></div>
+                <div class="step"><div class="step-number">2</div><div class="step-content"><h3>Paste</h3><p>Paste it into the field above and submit.</p></div></div>
+                <div class="step"><div class="step-number">3</div><div class="step-content"><h3>Select quality</h3><p>Choose from MaxRes, SD, HQ, MQ or default.</p></div></div>
+                <div class="step"><div class="step-number">4</div><div class="step-content"><h3>Download</h3><p>Use Download or Open in new tab and save the image.</p></div></div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section" aria-label="FAQ">
+            <h2 class="section-title">Frequently asked questions</h2>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Is this tool free?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Yes, it’s completely free and no data is stored.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Which resolutions are available?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Maximum Resolution (1280x720), SD (640x480), High (480x360), Medium (320x180) and default (120x90).</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Does it work with Shorts?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Yes, paste any valid YouTube URL including /shorts/ and we’ll extract the ID.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Commercial usage?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Respect copyright and YouTube’s Terms. Get permission from the content owner for commercial use.</p></div></div>
+        </section>
+
+        <footer role="contentinfo">
+            <div class="footer-content">
+                <p><strong>GetYTThumbnail</strong> – YouTube Thumbnail Downloader. Download high‑quality YouTube video thumbnails</p>
+                <p style="margin-top:8px">© 2025 GetYTThumbnail. All rights reserved.</p>
+            </div>
+            <nav class="footer-links" aria-label="Footer links">
+                <a href="/privacy" class="footer-link">Privacy Policy</a>
+                <a href="/terms" class="footer-link">Terms of Service</a>
+                <a href="/contact" class="footer-link">Contact</a>
+                <a href="/about" class="footer-link">About</a>
+            </nav>
+            <p style="color:#999; font-size:.9em; margin-top: 14px;">Disclaimer: Not affiliated with YouTube or Google. Trademarks belong to their owners.</p>
+        </footer>
+    </div>
+
+    <!-- Structured data -->
+    <script type="application/ld+json">{
+      "@context":"https://schema.org",
+      "@type":"WebApplication",
+      "name":"GetYTThumbnail",
+      "url":"/",
+      "applicationCategory":"Utility",
+      "operatingSystem":"All",
+      "description":"Client-side tool to fetch and download YouTube thumbnails in multiple resolutions.",
+      "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}
+    }</script>
+
+    <script>
+        // Robust extraction of YouTube video ID from many URL formats or raw ID
+        function extractVideoId(input) {
+            const trimmed = (input || '').trim();
+            if (!trimmed) return null;
+            // raw ID case
+            if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
+            let url;
+            try {
+                url = new URL(trimmed.includes('://') ? trimmed : ('https://' + trimmed));
+            } catch (_) {
+                return null;
+            }
+            const host = url.hostname.replace(/^www\./, '');
+            // youtu.be/<id>
+            if (host === 'youtu.be') {
+                const id = url.pathname.split('/').filter(Boolean)[0] || '';
+                return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : null;
+            }
+            // youtube.com/*
+            if (host.endsWith('youtube.com')) {
+                const sp = url.searchParams.get('v');
+                if (sp && /^[a-zA-Z0-9_-]{11}$/.test(sp)) return sp;
+                const parts = url.pathname.split('/').filter(Boolean);
+                // support /shorts/<id>, /embed/<id>, /v/<id>, etc.
+                for (const p of parts) {
+                    if (/^[a-zA-Z0-9_-]{11}$/.test(p)) return p;
+                }
+            }
+            return null;
+        }
+
+        function validateUrl(url) {
+            if (!url || url.trim() === '') {
+                return { valid: false, message: 'Please enter a YouTube URL or video ID.' };
+            }
+            const id = extractVideoId(url);
+            if (!id) {
+                return { valid: false, message: 'Invalid YouTube URL/ID. Please check and try again.' };
+            }
+            return { valid: true, videoId: id };
+        }
+
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = message; el.classList.add('active');
+            setTimeout(() => el.classList.remove('active'), 5000);
+        }
+        function hideError() { document.getElementById('errorMessage').classList.remove('active'); }
+        function showLoading() { document.getElementById('loading').classList.add('active'); document.getElementById('resultsSection').classList.remove('active'); }
+        function hideLoading() { document.getElementById('loading').classList.remove('active'); }
+
+        function generateThumbnailUrls(videoId) {
+            return [
+                { quality: 'Maximum Resolution', resolution: '1280x720', url: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` },
+                { quality: 'Standard Definition', resolution: '640x480', url: `https://img.youtube.com/vi/${videoId}/sddefault.jpg` },
+                { quality: 'High Quality', resolution: '480x360', url: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` },
+                { quality: 'Medium Quality', resolution: '320x180', url: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` },
+                { quality: 'Default', resolution: '120x90', url: `https://img.youtube.com/vi/${videoId}/default.jpg` },
+            ];
+        }
+
+
+        function createThumbnailCard(th, videoId) {
+            const card = document.createElement('div'); card.className = 'thumbnail-card';
+            const img = document.createElement('img'); img.className = 'thumbnail-img'; img.src = th.url; img.alt = `${th.quality} thumbnail`; img.loading = 'lazy'; img.decoding = 'async';
+            // Reserve space to reduce layout shift using known resolution
+            if (th.resolution && /^(\d+)x(\d+)$/.test(th.resolution)) {
+                const parts = th.resolution.split('x');
+                const w = parseInt(parts[0], 10), h = parseInt(parts[1], 10);
+                if (Number.isFinite(w) && Number.isFinite(h)) { img.width = w; img.height = h; }
+            }
+            img.onerror = function() {
+                this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"%3E%3Crect fill="%23ddd" width="640" height="480"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" fill="%23999"%3ENot Available%3C/text%3E%3C/svg%3E';
+                const openBtn = card.querySelector('.btn-open'); if (openBtn) { openBtn.disabled = true; openBtn.textContent = 'Not available'; openBtn.style.background = '#9ca3af'; openBtn.style.cursor = 'not-allowed'; }
+            };
+            const label = document.createElement('div'); label.className = 'thumbnail-label'; label.textContent = th.quality;
+            const res = document.createElement('div'); res.className = 'resolution'; res.textContent = `Resolution: ${th.resolution}`;
+            const openBtn = document.createElement('button'); openBtn.className = 'btn btn-open'; openBtn.textContent = 'Open in new tab'; openBtn.addEventListener('click', () => window.open(th.url, '_blank', 'noopener'));
+            card.append(img, label, res, openBtn);
+            return card;
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault(); hideError();
+            const v = document.getElementById('videoUrl').value;
+            const validation = validateUrl(v);
+            if (!validation.valid) { showError(validation.message); return; }
+            const videoId = validation.videoId;
+            showLoading();
+            setTimeout(() => {
+                try {
+                    const thumbs = generateThumbnailUrls(videoId);
+                    const info = document.getElementById('videoInfo');
+                    info.innerHTML = `<div class=\"video-title\">Video ID: ${videoId}</div><p style=\"color:var(--text-light);font-size:.95em\">Tip: If your browser blocks auto‑download for cross‑origin images, use “Open in new tab” then right‑click → “Save image as…”.</p>`;
+                    const grid = document.getElementById('thumbnailGrid'); grid.innerHTML = '';
+                    thumbs.forEach(t => grid.appendChild(createThumbnailCard(t, videoId)));
+                    hideLoading(); document.getElementById('resultsSection').classList.add('active');
+                    const smooth = !window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    document.getElementById('resultsSection').scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'nearest' });
+                } catch (err) {
+                    console.error(err); hideLoading(); showError('Something went wrong while generating thumbnails.');
+                }
+            }, 400);
+        }
+
+        function toggleFaq(el) {
+            const item = el.parentElement; const active = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            if (!active) item.classList.add('active');
+        }
+
+        function resetFormAndResults() {
+            const form = document.getElementById('thumbnailForm');
+            const input = document.getElementById('videoUrl');
+            const grid = document.getElementById('thumbnailGrid');
+            const info = document.getElementById('videoInfo');
+            form.reset();
+            hideError();
+            hideLoading();
+            document.getElementById('resultsSection').classList.remove('active');
+            grid.innerHTML = '';
+            info.textContent = '';
+            input.focus();
+        }
+
+        // Auto flip of non-thumbnail cards (respect reduced motion and pause on focus/hover)
+        function setupAutoFlip() {
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduce) return;
+            const wrappers = document.querySelectorAll('.flip-card-wrapper');
+            wrappers.forEach((el, idx) => {
+                let paused = false;
+                const setAria = () => el.setAttribute('aria-pressed', el.classList.contains('is-flipped') ? 'true' : 'false');
+                const toggle = () => { if (!paused) { el.classList.toggle('is-flipped'); setAria(); } };
+                const interval = 6000 + (idx % 3) * 700; // stagger flips slightly
+                const id = setInterval(toggle, interval);
+                el.dataset.flipTimer = String(id);
+                el.addEventListener('mouseenter', () => { paused = true; });
+                el.addEventListener('mouseleave', () => { paused = false; });
+                el.addEventListener('focusin', () => { paused = true; });
+                el.addEventListener('focusout', () => { paused = false; });
+            });
+            document.addEventListener('visibilitychange', function onVis() {
+                if (document.hidden) {
+                    document.querySelectorAll('.flip-card-wrapper').forEach(el => {
+                        if (el.dataset.flipTimer) { clearInterval(Number(el.dataset.flipTimer)); delete el.dataset.flipTimer; }
+                    });
+                } else {
+                    document.removeEventListener('visibilitychange', onVis);
+                    setupAutoFlip();
+                }
+            });
+        }
+
+        // Event wiring and minimal analytics placeholders (client-side only)
+        (function init() {
+            const form = document.getElementById('thumbnailForm');
+            form.addEventListener('submit', handleSubmit);
+            const input = document.getElementById('videoUrl');
+            input.addEventListener('focus', hideError);
+            input.addEventListener('keydown', e => { if (e.key === 'Enter') { /* form submit handles it */ } });
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) refreshBtn.addEventListener('click', resetFormAndResults);
+
+            // Wire up 3D flip for feature/affiliate cards and ads only (not thumbnails)
+            function wireFlipWrappers() {
+                document.querySelectorAll('.flip-card-wrapper').forEach(el => {
+                    el.addEventListener('click', (e) => {
+                        if (e.target.closest('a,button')) return; // don't toggle when clicking interactive elements
+                        const flipped = el.classList.toggle('is-flipped');
+                        el.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+                    });
+                    el.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const flipped = el.classList.toggle('is-flipped'); el.setAttribute('aria-pressed', flipped ? 'true' : 'false'); }
+                    });
+                });
+            }
+            wireFlipWrappers();
+            setupAutoFlip();
+
+            // Non-blocking click logging hooks you can integrate later with your analytics
+            window.requestIdleCallback ? requestIdleCallback(() => {
+                document.addEventListener('click', (e) => {
+                    const t = e.target;
+                    if (t.classList && t.classList.contains('btn-download')) {
+                        console.log('Download clicked');
+                    }
+                    if (t.closest && (t.closest('.affiliate-link') || t.closest('.ad-content a'))) {
+                        console.log('Affiliate/Ad clicked');
+                    }
+                });
+            }) : null;
+        })();
+    </script>
+
+    <!-- BreadcrumbList structured data -->
+    <script type="application/ld+json">{
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "/"},
+        {"@type": "ListItem", "position": 2, "name": "YouTube Thumbnail Downloader", "item": "/"}
+      ]
+    }</script>
+
+    <!-- FAQPage structured data -->
+    <script type="application/ld+json">{
+      "@context":"https://schema.org",
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"Is this tool free?","acceptedAnswer":{"@type":"Answer","text":"Yes, it’s completely free and no data is stored."}},
+        {"@type":"Question","name":"Which resolutions are available?","acceptedAnswer":{"@type":"Answer","text":"Maximum Resolution (1280x720), SD (640x480), High (480x360), Medium (320x180) and default (120x90)."}},
+        {"@type":"Question","name":"Does it work with Shorts?","acceptedAnswer":{"@type":"Answer","text":"Yes, paste any valid YouTube URL including /shorts/ and the ID will be extracted."}},
+        {"@type":"Question","name":"Commercial usage?","acceptedAnswer":{"@type":"Answer","text":"Respect copyright and YouTube’s Terms. Get permission from the content owner for commercial use."}}
+      ]
+    }</script>
+
+    <!-- HowTo structured data -->
+    <script type="application/ld+json">{
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to download YouTube thumbnails",
+      "step": [
+        {"@type":"HowToStep","name":"Copy URL","text":"Copy the video URL from YouTube (or the 11-character ID)."},
+        {"@type":"HowToStep","name":"Paste","text":"Paste it into the field and submit."},
+        {"@type":"HowToStep","name":"Select quality","text":"Choose from MaxRes, SD, HQ, MQ or default."},
+        {"@type":"HowToStep","name":"Download","text":"Open the image in a new tab and save it."}
+      ]
+    }</script>
+</body>
+</html>
